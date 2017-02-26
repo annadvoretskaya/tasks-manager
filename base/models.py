@@ -84,7 +84,8 @@ class Task(models.Model):
     due_date = models.DateTimeField(_('Due date'))
     created_at = models.DateTimeField(_('Created at'), auto_now_add=True)
     project = models.ForeignKey(Project, verbose_name=_('Project'), related_name='tasks')
-    assigned_to = models.ForeignKey(ApplicationUser, verbose_name=_('Assigned to'), related_name='tasks')
+    assigned_to = models.ForeignKey(ApplicationUser, verbose_name=_('Assigned to'),
+                                    related_name='tasks', null=True, blank=True)
 
     class Meta:
         verbose_name = _('Task')
