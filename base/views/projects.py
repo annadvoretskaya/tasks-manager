@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from base.forms.invites import InviteForm
+from base.forms.project import ProjectForm
 from base.models import Project, Invite
 from base.permissions import IsProjectOwnerPermission
 from base.views.permissions import PermissionsMixin
@@ -48,7 +49,7 @@ class CreateProjectView(CreateView):
 
 class UpdateProjectView(ProjectsByUserMixin, PermissionsMixin, UpdateView):
     model = Project
-    fields = ['title', 'description']
+    form_class = ProjectForm
     template_name = 'project/project_form.html'
     permission_classes = [IsProjectOwnerPermission]
 

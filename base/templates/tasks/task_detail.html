@@ -1,13 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
-    <strong>Task: {{ object.title }}</strong>
-    <p>{{ object.description }}</p>
-    <p>{{ object.due_date }}</p></br>
-    <p>{{ object.assigned_to }}</p></br>
+    <div class="container">
+        <h1 class="display-4">{{ object.title }}</h1>
+        <blockquote class="blockquote">
+            <p class="mb-0">{{ object.description }}</p>
+        </blockquote>
+        <h3>Due date</h3>
+        <p>{{ object.due_date }}</p></br>
+        <h3>Assigned to</h3>
+        <p>{{ object.assigned_to.username }}</p></br>
+        <div style="display: flex">
+            <a href="{% url 'base:task-update' object.project.pk object.pk %}">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </a>
+            <form method='post' action="{% url 'base:task-delete' object.project.pk object.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Delete</button>
+            </form>
+        </div>
+    </div>
 
-    <a href="{% url 'base:task-update' object.project.pk object.pk %}">Update</a>
-    <form method='post' action="{% url 'base:task-delete' object.project.pk object.pk %}">
-        {% csrf_token %}
-        <button type="submit">Delete</button>
-    </form>
 {% endblock %}

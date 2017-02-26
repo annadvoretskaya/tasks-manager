@@ -106,6 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LOGIN_REDIRECT_URL = reverse_lazy('base:projects')
 LOGIN_URL = reverse_lazy('base:login')
+LOGOUT_REDIRECT_URL = '/'
 
 
 # Internationalization

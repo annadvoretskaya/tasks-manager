@@ -1,29 +1,54 @@
 {% extends 'base.html' %}
+{% load user_tags %}
+
 {% block content %}
-    <h1>{{ object.title }}</h1>
-    <p>{{ object.description }}</p>
-    <strong>Tasks:</strong><br/>
-    {% for task in object.tasks.all %}
-        <a href="{% url 'base:task-detail' object.pk task.pk %}">{{ task }}</a><br/>
-    {% endfor %}
-    <br/>
-    <a href="{% url 'base:task-create' object.pk %}">New task</a>
-    </br>
-    <form method="post" action="{% url 'base:project-invite' object.pk %}">
-        {% csrf_token %}
-        {{ invite_form.as_p }}
-        <button type="submit">Send invite</button>
-    </form>
+    <div class="container">
+        <h1 class="display-4">{{ object.title }}</h1>
+        <blockquote class="blockquote">
+            <p class="mb-0">{{ object.description }}</p>
+        </blockquote>
+        <h3>Tasks:</h3>
+        <div>
+            {% for task in object.tasks.all %}
+                <a href="{% url 'base:task-detail' object.pk task.pk %}" class="list-group-item">{{ task }}</a><br/>
+            {% endfor %}
+            <a href="{% url 'base:task-create' object.pk %}">New task</a>
+
+        </div>
+        <h3>Members:</h3>
+        <div>
+            <ul class="list-group">
+                {% for member in object.list_members %}
+                    <li class="list-group-item">
+                        <h4>Username: {{ member.username }}</h4>
+                        <h4>Role: {{ member|member_role:object }}</h4>
+                        <a href="#" class="right">Remove</a>
+                        <a href="#" class="right">Change role</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <h3>Invite member:</h3>
+        <form method="post" action="{% url 'base:project-invite' object.pk %}" class="form-inline">
+            {% csrf_token %}
+            <div class="form-group mx-sm-3">
+                <label for="id_email" class="sr-only">Email:</label>
+                <input id="id_email" class="form-control" maxlength="254" name="email" type="email" required="" placeholder="Email">
+            </div>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    <div>
+        <a href="{% url 'base:project-update' object.pk %}">Update</a>
+        <a href="{% url 'base:project-delete' object.pk %}">Delete</a>
+    </div>
+
+    </div>
+
 
     {% for message in messages %}
         <p style="color: green">{{ message }}</p>
     {% endfor %}
     </br>
-    <strong>Members: </strong>
-    {% for member in object.list_members %}
-        <p>{{ member }}: {{ member.role }}</p>
-    {% endfor %}
-    </br>
-    <a href="{% url 'base:project-update' object.pk %}">Update</a>
-    <a href="{% url 'base:project-delete' object.pk %}">Delete</a>
+
+
 {% endblock %}

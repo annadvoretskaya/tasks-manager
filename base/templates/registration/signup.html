@@ -1,17 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">
-        Submit
-    </button>
-</form>
+{% extends 'base.html' %}
+{% block content %}
+    {% if form.errors %}
+        <p>{{ form.errors }}.</p>
+    {% endif %}
 
-</body>
-</html>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="login-panel panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Please Sign In</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form method="post" action="{% url 'base:signup' %}">
+                            {% csrf_token %}
+                            <p class="bs-component">
+                            <table>
+                                <tr>
+                                    <td>{{ form.username.label_tag }}</td>
+                                    <td>{{ form.username }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ form.email.label_tag }}</td>
+                                    <td>{{ form.email }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ form.password1.label_tag }}</td>
+                                    <td>{{ form.password1 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ form.password2.label_tag }}</td>
+                                    <td>{{ form.password2 }}</td>
+                                </tr>
+                            </table>
+                            </p>
+                            <p class="bs-component">
+                            <center>
+                                <input class="btn btn-success btn-sm" type="submit" value="Sign up" />
+                            </center>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

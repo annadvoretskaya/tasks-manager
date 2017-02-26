@@ -1,10 +1,13 @@
 from django.conf.urls import url
 from django.contrib.auth import views as auth_views
+from django.views.generic import RedirectView
+
 from base.views import SignUpView, ProjectsListView, CreateProjectView, UpdateProjectView, DeleteProjectView, \
     ProjectDetailView, CreateInviteView, JoinProjectView, DetailTaskView, CreateTaskView, UpdateTaskView, \
     DeleteTaskView
 
 urlpatterns = [
+    url(r'^$', RedirectView.as_view(pattern_name='base:projects'), name='projects-redirect'),
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
     url(r'^signup/$', SignUpView.as_view(), name='signup'),

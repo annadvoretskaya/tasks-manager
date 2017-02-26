@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
-    <strong>Projects</strong></br>
-    {% for project in projects %}
-        <a href="{% url 'base:project-detail' project.id %}">{{ project.title }}</a></br>
-    {% endfor %}
-    </br>
-    <a href="{% url 'base:project-create' %}" type="button"> Add new project</a>
+    <div class="container">
+        <h1 class="display-4">Projects</h1>
+        <div class="list-group">
+            {% for project in projects %}
+                <a href="{% url 'base:project-detail' project.id %}" class="list-group-item">{{ project.title }}</a></br>
+            {% endfor %}
+        </div>
+        <a href="{% url 'base:project-create' %}" type="button"> Add new project</a>
+    </div>
 {% endblock %}

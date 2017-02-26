@@ -35,6 +35,12 @@ class CreateTaskView(LoginRequiredMixin, PermissionsMixin, CreateView):
 
         return super(CreateTaskView, self).form_valid(form)
 
+    def get_form_kwargs(self):
+        kwargs = super(CreateTaskView, self).get_form_kwargs()
+        project = get_object_or_404(Project, pk=self.kwargs.get('project_pk', None))
+        kwargs['project'] = project
+        return kwargs
+
 
 class DetailTaskView(LoginRequiredMixin, ProjectTasksMixin, DetailView):
     model = Task
@@ -50,7 +56,8 @@ class UpdateTaskView(LoginRequiredMixin, ProjectTasksMixin, PermissionsMixin, Up
 
     def get_form_kwargs(self):
         kwargs = super(UpdateTaskView, self).get_form_kwargs()
-        kwargs['project'] = None
+        project = get_object_or_404(Project, pk=self.kwargs.get('project_pk', None))
+        kwargs['project'] = project
         return kwargs
 
 
