@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>{{ object.title }}</h1>
+    <p>{{ object.description }}</p>
+    <strong>Tasks:</strong><br/>
+    {% for task in object.tasks.all %}
+        <a href="{% url 'base:task-detail' object.pk task.pk %}">{{ task }}</a><br/>
+    {% endfor %}
+    <br/>
+    <a href="{% url 'base:task-create' object.pk %}">New task</a>
+    </br>
+    <form method="post" action="{% url 'base:project-invite' object.pk %}">
+        {% csrf_token %}
+        {{ invite_form.as_p }}
+        <button type="submit">Send invite</button>
+    </form>
+
+    {% for message in messages %}
+        <p style="color: green">{{ message }}</p>
+    {% endfor %}
+    </br>
+    <strong>Members: </strong>
+    {% for member in object.list_members %}
+        <p>{{ member }}: {{ member.role }}</p>
+    {% endfor %}
+    </br>
+    <a href="{% url 'base:project-update' object.pk %}">Update</a>
+    <a href="{% url 'base:project-delete' object.pk %}">Delete</a>
+{% endblock %}

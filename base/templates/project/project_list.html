@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+    <strong>Projects</strong></br>
+    {% for project in projects %}
+        <a href="{% url 'base:project-detail' project.id %}">{{ project.title }}</a></br>
+    {% endfor %}
+    </br>
+    <a href="{% url 'base:project-create' %}" type="button"> Add new project</a>
+{% endblock %}
