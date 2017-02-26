@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load project_tags %}
 {% block content %}
     <div class="container">
         <h1 class="display-4">{{ object.title }}</h1>
@@ -9,15 +10,18 @@
         <p>{{ object.due_date }}</p></br>
         <h3>Assigned to</h3>
         <p>{{ object.assigned_to.username }}</p></br>
-        <div style="display: flex">
-            <a href="{% url 'base:task-update' object.project.pk object.pk %}">
-                <button type="submit" class="btn btn-primary">Update</button>
-            </a>
-            <form method='post' action="{% url 'base:task-delete' object.project.pk object.pk %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-primary">Delete</button>
-            </form>
-        </div>
+        {% if user|is_manager:object.project %}
+            <div style="display: flex">
+                <a href="{% url 'base:task-update' object.project.pk object.pk %}">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </a>
+                <form method='post' action="{% url 'base:task-delete' object.project.pk object.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Delete</button>
+                </form>
+            </div>
+        {% endif %}
+
     </div>
 
 {% endblock %}

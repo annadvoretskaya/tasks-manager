@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load user_tags %}
+{% load project_tags %}
 
 {% block content %}
     <div class="container">
@@ -12,7 +12,9 @@
             {% for task in object.tasks.all %}
                 <a href="{% url 'base:task-detail' object.pk task.pk %}" class="list-group-item">{{ task }}</a><br/>
             {% endfor %}
-            <a href="{% url 'base:task-create' object.pk %}">New task</a>
+            {% if user|is_manager:object %}
+                <a href="{% url 'base:task-create' object.pk %}">New task</a>
+            {% endif %}
 
         </div>
         <h3>Members:</h3>
@@ -22,33 +24,43 @@
                     <li class="list-group-item">
                         <h4>Username: {{ member.username }}</h4>
                         <h4>Role: {{ member|member_role:object }}</h4>
-                        <a href="#" class="right">Remove</a>
-                        <a href="#" class="right">Change role</a>
+                        {% if user|is_owner:object %}
+                            <div style="display: flex">
+                                <form method="post" action="{% url 'base:member-remove' object.pk member.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary">Remove</button>
+                                </form>
+                                    <form method="post" action="{% url 'base:member-change-role' object.pk member.pk  %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-primary">Change Role</button>
+                                    </form>
+                            </div>
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ul>
         </div>
-        <h3>Invite member:</h3>
-        <form method="post" action="{% url 'base:project-invite' object.pk %}" class="form-inline">
-            {% csrf_token %}
-            <div class="form-group mx-sm-3">
-                <label for="id_email" class="sr-only">Email:</label>
-                <input id="id_email" class="form-control" maxlength="254" name="email" type="email" required="" placeholder="Email">
+        {% if user|is_manager:object %}
+            <h3>Invite member:</h3>
+            <form method="post" action="{% url 'base:project-invite' object.pk %}" class="form-inline">
+                {% csrf_token %}
+                <div class="form-group mx-sm-3">
+                    <label for="id_email" class="sr-only">Email:</label>
+                    <input id="id_email" class="form-control" maxlength="254" name="email" type="email" required="" placeholder="Email">
+                </div>
+                <button type="submit" class="btn btn-primary">Send</button>
+            </form>
+
+            {% for message in messages %}
+                <p style="color: green">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+        </br>
+        {% if user|is_owner:object %}
+            <div>
+                <a href="{% url 'base:project-update' object.pk %}">Update</a>
+                <a href="{% url 'base:project-delete' object.pk %}">Delete</a>
             </div>
-            <button type="submit" class="btn btn-primary">Send</button>
-        </form>
-    <div>
-        <a href="{% url 'base:project-update' object.pk %}">Update</a>
-        <a href="{% url 'base:project-delete' object.pk %}">Delete</a>
+        {% endif %}
     </div>
-
-    </div>
-
-
-    {% for message in messages %}
-        <p style="color: green">{{ message }}</p>
-    {% endfor %}
-    </br>
-
-
 {% endblock %}

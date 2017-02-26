@@ -3,9 +3,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+from django.views.generic.base import View
+
 from base.forms.invites import InviteForm
 from base.forms.project import ProjectForm
-from base.models import Project, Invite
+from base.models import Project, Invite, ApplicationUser
 from base.permissions import IsProjectOwnerPermission
 from base.views.permissions import PermissionsMixin
 
@@ -82,6 +84,31 @@ class JoinProjectView(LoginRequiredMixin, TemplateView):
         project.developers.add(request.user)
 
         return redirect(reverse('base:project-detail', args=(project.pk, )))
+
+
+class RemoveMemberFromProjectView(View):
+    http_method_names = ['post']
+
+    def post(self, request, *args, **kwargs):
+        project_pk = kwargs.get('project_pk')
+        member_pk = kwargs.get('pk')
+        project = get_object_or_404(Project, pk=project_pk)
+        member = get_object_or_404(ApplicationUser, pk=member_pk)
+        project.remove_member(member)
+
+        return redirect(reverse('base:project-detail', args=(project_pk,)))
+
+
+class ChangeRoleOnProjectView(View):
+    http_method_names = ['post']
+
+    def post(self, request, *args, **kwargs):
+        project_pk = kwargs.get('project_pk')
+        member_pk = kwargs.get('pk')
+        project = get_object_or_404(Project, pk=project_pk)
+        member = get_object_or_404(ApplicationUser, pk=member_pk)
+        project.change_member_role(member)
+        return redirect(reverse('base:project-detail', args=(project_pk,)))
 
 
 

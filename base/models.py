@@ -1,11 +1,14 @@
 from __future__ import unicode_literals
 import uuid
 from django.contrib.auth.models import User, AbstractUser
+from django.core.mail import send_mail
 
 from django.db import models
 from django.db.models import Q
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
+
+from config import settings
 
 
 class ProjectQuerySet(models.QuerySet):
@@ -60,6 +63,20 @@ class Project(models.Model):
     def list_members(self):
         return self.managers.all() | self.developers.all()
 
+    def remove_member(self, user):
+        if self.is_manager(user):
+            self.managers.remove(user)
+        else:
+            self.developers.remove(user)
+
+    def change_member_role(self, user):
+        if self.is_manager(user):
+            self.managers.remove(user)
+            self.developers.add(user)
+        else:
+            self.developers.remove(user)
+            self.managers.add(user)
+
 
 class Task(models.Model):
     title = models.CharField(_('Title'), max_length=256)
@@ -92,5 +109,11 @@ class Invite(models.Model):
     def __unicode__(self):
         return str(self.uuid)
 
+    def _get_invite_url(self):
+        return "{}{}".format(settings.BASE_URL, reverse('base:project-join', args=(self.pk, )))
+
     def send(self):
-        pass
+        subject = 'Join {0}!'.format(self.project.title)
+        message = 'Hello! Follow the link below and join our team! {0}'.format(self._get_invite_url())
+        email_from = settings.DEFAULT_FROM_EMAIL
+        send_mail(subject, message, email_from, (self.email, ))

@@ -6,21 +6,22 @@
             {% csrf_token %}
             <div class="form-group">
                 <label for="id_title">{{ form.title.label }}</label>
-                <input id="id_title" maxlength="256" name="title" type="text" required="" class="form-control">
+                <input id="id_title" maxlength="256" name="title" type="text" required=""
+                       class="form-control" value="{{ form.title.value }}">
             </div>
             <div class="form-group">
                 <label for="description">{{ form.description.label }}</label>
-                <textarea cols="40" id="id_description" name="description" rows="10" class="form-control"></textarea>
+                <textarea cols="40" id="id_description" name="description" rows="10" class="form-control">{{ form.description.value }}</textarea>
             </div>
             <div class="form-group">
                 <label for="id_due_date">{{ form.due_date.label }}</label>
-                <input id="id_due_date" name="due_date" type="date" required="" class="form-control">
+                <input id="id_due_date" name="due_date" type="date" required="" class="form-control" value="{{ form.due_date.value|date:"Y-m-d" }}">
             </div>
             <div class="form-group">
                 <label for="id_assigned_to">{{ form.assigned_to.label }}</label>
                 {{ form.assigned_to }}
             </div>
-            <button type="submit">Save</button>
+            <button type="submit" class="btn btn-primary">Save</button>
         </form>
     </div>
 {% endblock %}

@@ -5,11 +5,11 @@
         {% csrf_token %}
         <div class="form-group">
             <label for="id_label">{{ form.title.label }}</label>
-            <input type="text" class="form-control" id="id_label" name="title">
+            <input type="text" class="form-control" id="id_label" name="title" value="{{ form.title.value }}">
         </div>
         <div class="form-group">
             <label for="id_description">{{ form.description.label }}</label>
-            <textarea class="form-control" rows="5" id="id_description" name="description"></textarea>
+            <textarea class="form-control" rows="5" id="id_description" name="description" >{{ form.description.value }}</textarea>
         </div>
         <button type="submit" class="btn btn-primary">Save</button>
     </form>

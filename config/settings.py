@@ -29,7 +29,16 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CURRENT_HOST = "127.0.0.1:8000"
+BASE_URL = "http://" + CURRENT_HOST
+
 AUTH_USER_MODEL = 'base.ApplicationUser'
+
+DEFAULT_FROM_EMAIL = 'noreply@example.com'
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+MAILING_USE_CELERY = False
 
 
 # Application definition
