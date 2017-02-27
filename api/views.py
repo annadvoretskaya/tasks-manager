@@ -7,7 +7,7 @@ from rest_framework.permissions import SAFE_METHODS
 from rest_framework.response import Response
 
 from api import serializers
-from api.permissions import IsProjectManager
+from api.permissions import IsProjectManager, IsManager
 from base.models import ApplicationUser, Project, Task, Invite
 
 
@@ -35,6 +35,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
 
 class NestedProjectMixinViewSet(viewsets.GenericViewSet):
+    permission_classes = [permissions.IsAuthenticated, IsManager]
+
     def initial(self, request, *args, **kwargs):
         super(NestedProjectMixinViewSet, self).initial(request, *args, **kwargs)
         project_pk = kwargs.get('project_pk')
@@ -43,8 +45,6 @@ class NestedProjectMixinViewSet(viewsets.GenericViewSet):
 
 class TaskViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.RetrieveModelMixin,
                   mixins.ListModelMixin, NestedProjectMixinViewSet):
-    permission_classes = [permissions.IsAuthenticated]
-
     queryset = Task.objects.all()
     serializer_class = serializers.TaskSerializer
     retrieve_serializer_class = serializers.RetrieveTaskSerializer
@@ -62,8 +62,6 @@ class TaskViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.Retr
 
 
 class InviteViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, NestedProjectMixinViewSet):
-    permission_classes = [permissions.IsAuthenticated]
-
     serializer_class = serializers.InviteSerializer
     queryset = Invite.objects.all()
 
@@ -75,8 +73,6 @@ class InviteViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, NestedProjec
 
 
 class ProjectMembersViewSet(mixins.DestroyModelMixin, mixins.ListModelMixin, NestedProjectMixinViewSet):
-    permission_classes = [permissions.IsAuthenticated]
-
     serializer_class = serializers.UserSerializer
     queryset = ApplicationUser.objects.all()
 
