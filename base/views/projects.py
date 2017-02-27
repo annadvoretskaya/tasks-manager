@@ -5,17 +5,10 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.views.generic.base import View
 
-from base.forms.invites import InviteForm
-from base.forms.project import ProjectForm
+from base.forms import InviteForm, ProjectForm
+from base.mixins import ProjectsByUserMixin, PermissionsMixin
 from base.models import Project, Invite, ApplicationUser
 from base.permissions import IsProjectOwnerPermission
-from base.views.permissions import PermissionsMixin
-
-
-class ProjectsByUserMixin(object):
-    def get_queryset(self):
-        queryset = super(ProjectsByUserMixin, self).get_queryset()
-        return queryset.by_user(self.request.user)
 
 
 class ProjectsListView(LoginRequiredMixin, ProjectsByUserMixin, ListView):
@@ -59,7 +52,7 @@ class UpdateProjectView(ProjectsByUserMixin, PermissionsMixin, UpdateView):
 class DeleteProjectView(ProjectsByUserMixin, PermissionsMixin, DeleteView):
     model = Project
     template_name = 'project/project_confirm_delete.html'
-    success_url = reverse_lazy('base:projects')
+    success_url = reverse_lazy('base:projects-list')
     permission_classes = [IsProjectOwnerPermission]
 
 
@@ -107,10 +100,9 @@ class ChangeRoleOnProjectView(View):
         member_pk = kwargs.get('pk')
         project = get_object_or_404(Project, pk=project_pk)
         member = get_object_or_404(ApplicationUser, pk=member_pk)
-        project.change_member_role(member)
+        project.swap_roles(member)
         return redirect(reverse('base:project-detail', args=(project_pk,)))
 
 
-
-
-
+__all__ = ['ProjectsListView', 'ProjectDetailView', 'CreateProjectView', 'DeleteProjectView',
+           'UpdateProjectView', 'JoinProjectView', 'RemoveMemberFromProjectView', 'ChangeRoleOnProjectView']

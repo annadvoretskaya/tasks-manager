@@ -14,3 +14,6 @@ class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ['title', 'description', 'managers', 'developers']
+
+
+__all__ = ['ProjectForm', ]

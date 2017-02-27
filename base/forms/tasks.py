@@ -20,3 +20,6 @@ class TaskForm(forms.ModelForm):
         widgets = {
             'due_date': DateInput()
         }
+
+
+__all__ = ['TaskForm', ]

@@ -34,17 +34,20 @@ class ProjectViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
 
-class TaskViewSet(viewsets.ModelViewSet):
+class NestedProjectMixinViewSet(viewsets.GenericViewSet):
+    def initial(self, request, *args, **kwargs):
+        super(NestedProjectMixinViewSet, self).initial(request, *args, **kwargs)
+        project_pk = kwargs.get('project_pk')
+        self.project = get_object_or_404(Project, pk=project_pk)
+
+
+class TaskViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.RetrieveModelMixin,
+                  mixins.ListModelMixin, NestedProjectMixinViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     queryset = Task.objects.all()
     serializer_class = serializers.TaskSerializer
     retrieve_serializer_class = serializers.RetrieveTaskSerializer
-
-    def initial(self, request, *args, **kwargs):
-        super(TaskViewSet, self).initial(request, *args, **kwargs)
-        project_pk = kwargs.get('project_pk')
-        self.project = get_object_or_404(Project, pk=project_pk)
 
     def get_serializer_class(self):
         if self.request.method in SAFE_METHODS:
@@ -58,22 +61,30 @@ class TaskViewSet(viewsets.ModelViewSet):
         serializer.save(project=self.project)
 
 
-class InviteViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class InviteViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, NestedProjectMixinViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     serializer_class = serializers.InviteSerializer
     queryset = Invite.objects.all()
-
-    def initial(self, request, *args, **kwargs):
-        super(InviteViewSet, self).initial(request, *args, **kwargs)
-        project_pk = kwargs.get('project_pk')
-        self.project = get_object_or_404(Project, pk=project_pk)
 
     def get_queryset(self):
         return self.queryset.filter(project=self.project)
 
     def perform_create(self, serializer):
         serializer.save(project=self.project)
+
+
+class ProjectMembersViewSet(mixins.DestroyModelMixin, mixins.ListModelMixin, NestedProjectMixinViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
+    serializer_class = serializers.UserSerializer
+    queryset = ApplicationUser.objects.all()
+
+    def get_queryset(self):
+        return self.queryset.filter(tasks__project=self.project).distinct()
+
+    def perform_destroy(self, instance):
+        self.project.remove_member(instance)
 
 
 class LogoutView(views.APIView):

@@ -10,3 +10,6 @@ class UserCreationForm(BaseUserCreationForm):
         field_classes = {
             'username': UsernameField
         }
+
+
+__all__ = ['UserCreationForm', ]

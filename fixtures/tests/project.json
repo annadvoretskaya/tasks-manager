@@ -1,0 +1,38 @@
+[
+  {
+    "model": "base.project",
+    "pk": 1,
+    "fields":
+      {
+        "title": "Test porject 1",
+        "description": "Lorem ipsum dolor sit amet, ea vix convenire sapientem, sea ei novum sonet temporibus. Eos munere voluptua nominati ea, in est cetero verterem.",
+        "owner": 1,
+        "managers": [1, 2],
+        "developers": [3]
+      }
+  },
+  {
+    "model": "base.project",
+    "pk": 2,
+    "fields":
+      {
+        "title": "Test project 2",
+        "description": "Lorem ipsum dolor sit amet, ea vix convenire sapientem, sea ei novum sonet temporibus. Eos munere voluptua nominati ea, in est cetero verterem.",
+        "owner": 2,
+        "managers": [1, 2],
+        "developers": []
+      }
+  },
+  {
+    "model": "base.project",
+    "pk": 3,
+    "fields":
+      {
+        "title": "Test project 3",
+        "description": "Lorem ipsum dolor sit amet, ea vix convenire sapientem, sea ei novum sonet temporibus. Eos munere voluptua nominati ea, in est cetero verterem.",
+        "owner": 1,
+        "managers": [1],
+        "developers": [2, 3]
+      }
+  }
+]

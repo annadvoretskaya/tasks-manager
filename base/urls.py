@@ -5,12 +5,12 @@ from django.views.generic import RedirectView
 from base import views
 
 urlpatterns = [
-    url(r'^$', RedirectView.as_view(pattern_name='base:projects'), name='projects-redirect'),
+    url(r'^$', RedirectView.as_view(pattern_name='base:projects-list'), name='projects-redirect'),
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
     url(r'^signup/$', views.SignUpView.as_view(), name='signup'),
 
-    url(r'^projects/$', views.ProjectsListView.as_view(), name='projects'),
+    url(r'^projects/$', views.ProjectsListView.as_view(), name='projects-list'),
     url(r'^projects/(?P<pk>\d+)/$', views.ProjectDetailView.as_view(), name='project-detail'),
     url(r'^projects/(?P<pk>\d+)/invite/$', views.CreateInviteView.as_view(), name='project-invite'),
     url(r'^projects/(?P<pk>\d+)/update/$', views.UpdateProjectView.as_view(), name='project-update'),

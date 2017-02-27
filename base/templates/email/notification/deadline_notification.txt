@@ -1,0 +1,10 @@
+{% extends 'mailing/base.txt' %}
+
+{% block email_body %}
+  Hello, {{ user.username }}
+
+  Following tasks have deadline today:
+    {% for task in tasks %}
+      - {{ task.title }}
+    {% endfor %}
+{% endblock %}

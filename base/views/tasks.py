@@ -1,18 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
-from base.forms.tasks import TaskForm
+
+from base.forms import TaskForm
+from base.mixins import ProjectTasksMixin, PermissionsMixin
 from base.models import Task, Project
 from base.permissions import IsTaskOwnerOrManagerPermission
-from base.views.permissions import PermissionsMixin
-
-
-class ProjectTasksMixin(object):
-    def get_queryset(self):
-        queryset = super(ProjectTasksMixin, self).get_queryset()
-        project_id = self.kwargs.get('project_pk', None)
-        return queryset.filter(project_id=project_id)
 
 
 class TasksListView(LoginRequiredMixin, ProjectTasksMixin, ListView):
@@ -68,3 +62,5 @@ class DeleteTaskView(LoginRequiredMixin, ProjectTasksMixin, PermissionsMixin, De
     def get_success_url(self):
         return reverse('base:project-detail', args=self.kwargs.get('project_pk'))
 
+
+__all__ = ['TasksListView', 'CreateTaskView', 'DetailTaskView', 'UpdateTaskView', 'DeleteTaskView']

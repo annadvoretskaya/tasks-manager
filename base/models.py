@@ -1,12 +1,12 @@
 from __future__ import unicode_literals
 import uuid
-from django.contrib.auth.models import User, AbstractUser
-from django.core.mail import send_mail
 
+from django.contrib.auth.models import User, AbstractUser
 from django.db import models
 from django.db.models import Q
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
+from mailing.shortcuts import render_send_email
 
 from config import settings
 
@@ -22,13 +22,6 @@ class ApplicationUser(AbstractUser):
     def __unicode__(self):
         return "User: {0}".format(self.username)
 
-    def role(self, project):
-        if project.is_owner(self):
-            return 'owner'
-        elif project.is_manager(self):
-            return 'manager'
-        return 'developer'
-
 
 class Project(models.Model):
     title = models.CharField(_('Title'), max_length=256)
@@ -39,6 +32,10 @@ class Project(models.Model):
                                         related_name='developer_projects', blank=True)
 
     objects = ProjectQuerySet.as_manager()
+
+    OWNER = 'owner'
+    MANAGER = 'manager'
+    DEVELOPER = 'developer'
 
     class Meta:
         verbose_name = _('Project')
@@ -69,13 +66,20 @@ class Project(models.Model):
         else:
             self.developers.remove(user)
 
-    def change_member_role(self, user):
+    def swap_roles(self, user):
         if self.is_manager(user):
             self.managers.remove(user)
             self.developers.add(user)
         else:
             self.developers.remove(user)
             self.managers.add(user)
+
+    def role_on_project(self, user):
+        if self.is_owner(user):
+            return self.OWNER
+        elif self.is_manager(user):
+            return self.MANAGER
+        return self.DEVELOPER
 
 
 class Task(models.Model):
@@ -103,6 +107,8 @@ def get_uuid():
 
 
 class Invite(models.Model):
+    """Model for inviting users to the project"""
+
     uuid = models.UUIDField(primary_key=True, default=get_uuid)
     email = models.EmailField()
     project = models.ForeignKey(Project, null=True)
@@ -114,7 +120,5 @@ class Invite(models.Model):
         return "{}{}".format(settings.BASE_URL, reverse('base:project-join', args=(self.pk, )))
 
     def send(self):
-        subject = 'Join {0}!'.format(self.project.title)
-        message = 'Hello! Follow the link below and join our team! {0}'.format(self._get_invite_url())
-        email_from = settings.DEFAULT_FROM_EMAIL
-        send_mail(subject, message, email_from, (self.email, ))
+        context = {'url': self._get_invite_url()}
+        render_send_email([self.email, ], 'email/invite/invite', context)

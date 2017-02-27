@@ -1,0 +1,8 @@
+{% extends 'mailing/base.txt' %}
+
+{% block email_body %}
+    Hello!
+
+    Follow the link below and join our team!
+    {{ url }}
+{% endblock %}

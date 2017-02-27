@@ -1,0 +1,54 @@
+[
+  {
+    "model": "base.task",
+    "pk": 1,
+    "fields":
+      {
+        "title": "Test task 1",
+        "description": "Lorem ipsum",
+        "due_date": "2017-02-01T00:00:00Z",
+        "created_at": "2017-02-26T13:19:35.730Z",
+        "project": 1,
+        "assigned_to": null
+      }
+  },
+  {
+    "model": "base.task",
+    "pk": 2,
+    "fields":
+      {
+        "title": "Test task 2",
+        "description": "Lorem ipsum",
+        "due_date": "2017-03-02T00:00:00Z",
+        "created_at": "2017-02-26T13:23:54.256Z",
+        "project": 1,
+        "assigned_to": 2
+      }
+  },
+  {
+    "model": "base.task",
+    "pk": 3,
+    "fields":
+      {
+        "title": "Test task 3",
+        "description": "Lorem ipsum",
+        "due_date": "2017-03-02T00:00:00Z",
+        "created_at": "2017-02-26T15:13:01.020Z",
+        "project": 2,
+        "assigned_to": 1
+      }
+  },
+  {
+    "model": "base.task",
+    "pk": 4,
+    "fields":
+      {
+        "title": "Test task 4",
+        "description": "Lorem ipsum",
+        "due_date": "2017-02-24T00:00:00Z",
+        "created_at": "2017-02-26T15:40:49.817Z",
+        "project": 3,
+        "assigned_to": 1
+      }
+  }
+]

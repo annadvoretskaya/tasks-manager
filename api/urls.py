@@ -15,10 +15,14 @@ tasks_router.register(r'tasks', views.TaskViewSet)
 invites_router = NestedSimpleRouter(router, r'projects', lookup='project')
 invites_router.register(r'invites', views.InviteViewSet)
 
+members_router = NestedSimpleRouter(router, r'projects', lookup='project')
+members_router.register(r'members', views.ProjectMembersViewSet)
+
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^', include(tasks_router.urls)),
     url(r'^', include(invites_router.urls)),
+    url(r'^', include(members_router.urls)),
     url(r'^login/?', auth_views.obtain_auth_token, name="login"),
     url(r'^logout/?', views.LogoutView.as_view(), name="logout"),
 ]

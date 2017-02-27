@@ -34,13 +34,6 @@ BASE_URL = "http://" + CURRENT_HOST
 
 AUTH_USER_MODEL = 'base.ApplicationUser'
 
-DEFAULT_FROM_EMAIL = 'noreply@example.com'
-SERVER_EMAIL = DEFAULT_FROM_EMAIL
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-MAILING_USE_CELERY = False
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -50,11 +43,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'celery',
-    # 'mailing',
+    'celery',
+    'mailing',
     'rest_framework',
     'rest_framework.authtoken',
     'base',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -117,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LOGIN_REDIRECT_URL = reverse_lazy('base:projects')
+LOGIN_REDIRECT_URL = reverse_lazy('base:projects-list')
 LOGIN_URL = reverse_lazy('base:login')
 LOGOUT_REDIRECT_URL = '/'
 
@@ -148,3 +142,15 @@ REST_FRAMEWORK = {
     )
 }
 
+# Mail settings
+DEFAULT_FROM_EMAIL = 'contact@mydomain.com'
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+MAILING_USE_CELERY = True
+
+# Celery settings
+CELERY_IGNORE_RESULT = True
+CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
+CELERY_TASK_SERIALIZER = 'pickle'
+CELERY_RESULT_SERIALIZER = 'pickle'
+CELERY_ACCEPT_CONTENT = ['application/x-python-serialize', 'application/json']

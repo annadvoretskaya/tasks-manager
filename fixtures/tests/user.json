@@ -1,0 +1,59 @@
+[
+  {
+    "model": "base.applicationuser",
+    "pk": 1,
+    "fields":
+      {
+        "password": "pbkdf2_sha256$30000$ixjKA8o1w9zN$jl3qJPXp9DpsVTX6mESK7ENsllwoLMPtw+Du/iZQ0lU=",
+        "last_login": "2017-02-26T20:08:32.755Z",
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "Test",
+        "last_name": "Admin",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2017-02-26T12:32:15.129Z",
+        "email": "admin@admin.com",
+        "groups": [],
+        "user_permissions": []
+      }
+  },
+  {
+    "model": "base.applicationuser",
+    "pk": 2,
+    "fields":
+      {
+        "password": "pbkdf2_sha256$30000$aLs5PRTQMKso$1ypCeI3Gie9VKOr204uxVx2yyJ8rtU96yKbWv5KaFu8=",
+        "last_login": "2017-02-26T19:14:30.196Z",
+        "is_superuser": false,
+        "username": "test_manager",
+        "first_name": "Test",
+        "last_name": "Manager",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2017-02-26T17:36:57.878Z",
+        "email": "manager@test.com",
+        "groups": [],
+        "user_permissions": []
+      }
+  },
+  {
+    "model": "base.applicationuser",
+    "pk": 3,
+    "fields":
+      {
+        "password": "pbkdf2_sha256$30000$627FPsmCxy1K$t6/B2dIumiUdvMAiA+/yCcR4O20qynkH6HgXcV3DfF8=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "test_developer",
+        "first_name": "Test",
+        "last_name": "Developer",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2017-02-26T20:49:49.030Z",
+        "email": "developer@test.com",
+        "groups": [],
+        "user_permissions": []
+      }
+  }
+]
